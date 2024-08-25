@@ -4,6 +4,8 @@ import { AppService } from './app.service';
 import configuration from './config/configuration';
 import { ConfigModule } from '@nestjs/config';
 import { ThrottlerModule } from '@nestjs/throttler';
+import { ResendModule } from './resend/resend.module';
+import { PlunkModule } from './plunk/plunk.module';
 
 @Module({
   imports: [
@@ -17,6 +19,8 @@ import { ThrottlerModule } from '@nestjs/throttler';
         limit: 50,
       },
     ]),
+    ResendModule,
+    PlunkModule,
   ],
   controllers: [AppController],
   providers: [AppService],
