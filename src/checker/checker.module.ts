@@ -5,5 +5,6 @@ import { CheckerService } from './checker.service';
   imports: [],
   controllers: [],
   providers: [CheckerService],
+  exports: [CheckerService],
 })
 export class CheckerModule {}

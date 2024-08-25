@@ -20,11 +20,13 @@ export class ResendService {
     text: string,
   ): Promise<ResendResponse> {
     const { data, error } = await this.resend.emails.send({
-      from: 'onboarding@resend.dev',
+      from: 'Acme <onboarding@resend.dev>',
       to: receiver,
       subject: subject,
       html: `<p>${text}</p>`,
     });
+
+    Logger.log(`Email sent successfully: ${data.id}`);
 
     if (error) {
       Logger.error(`Failed to send email: ${error.message}`);
