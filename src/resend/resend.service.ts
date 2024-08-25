@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { Resend } from 'resend';
 import { ResendResponse } from './resend.model';
 import { CheckerService } from 'src/checker/checker.service';
+import { WriterService } from 'src/writer/writer.service';
 
 @Injectable()
 export class ResendService {
@@ -10,6 +11,7 @@ export class ResendService {
   constructor(
     private configService: ConfigService,
     private checkerService: CheckerService,
+    private writerService: WriterService,
   ) {
     this.resend = new Resend(this.configService.get('RESEND_API_KEY'));
   }
@@ -19,10 +21,6 @@ export class ResendService {
     subject: string,
     text: string,
   ): Promise<ResendResponse> {
-    Logger.log('Sending email');
-    Logger.log(`Receiver: ${receiver}`);
-    Logger.log(`Subject: ${subject}`);
-    Logger.log(`Text: ${text}`);
     const { data, error } = await this.resend.emails.send({
       from: 'Acme <onboarding@resend.dev>',
       to: receiver,
@@ -39,7 +37,6 @@ export class ResendService {
     }
 
     Logger.log(`Email sent successfully: ${data}`);
-
     return {
       message: 'Email sent successfully',
       statusCode: 200,
@@ -59,6 +56,13 @@ export class ResendService {
       };
     }
 
+    if (this.writerService.checkLatestDuplicateEmail(receiver, subject, text)) {
+      return {
+        statusCode: 200,
+        message: 'Email already sent successfully',
+      };
+    }
+
     let success = false;
     for (let i = 0; i < retry; i++) {
       const response = await this.sendEmail(receiver, subject, text);
@@ -67,7 +71,20 @@ export class ResendService {
       }
 
       if (success) {
+        this.writerService.writeToFile({
+          receiver,
+          subject,
+          message: text,
+          isAttempting: false,
+        });
         return response;
+      } else {
+        this.writerService.writeToFile({
+          receiver,
+          subject,
+          message: text,
+          isAttempting: true,
+        });
       }
     }
 

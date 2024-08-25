@@ -5,5 +5,6 @@ import { WriterService } from './writer.service';
   imports: [],
   controllers: [],
   providers: [WriterService],
+  exports: [WriterService],
 })
 export class WriterModule {}

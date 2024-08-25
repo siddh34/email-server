@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import Plunk from '@plunk/node';
 import { CheckerService } from 'src/checker/checker.service';
 import { PlunkResponse } from './plunk.model';
+import { WriterService } from 'src/writer/writer.service';
 
 @Injectable()
 export class PlunkService {
@@ -10,6 +11,7 @@ export class PlunkService {
   constructor(
     private configService: ConfigService,
     private checkerService: CheckerService,
+    private writerService: WriterService,
   ) {
     this.plunk = new Plunk(this.configService.get('PLUNK_API_KEY'));
   }
@@ -51,6 +53,13 @@ export class PlunkService {
       };
     }
 
+    if (this.writerService.checkLatestDuplicateEmail(receiver, subject, text)) {
+      return {
+        statusCode: 200,
+        message: 'Email already sent successfully',
+      };
+    }
+
     let success = false;
     for (let i = 0; i < retry; i++) {
       const response = await this.sendEmail(receiver, subject, text);
@@ -58,7 +67,20 @@ export class PlunkService {
         success = true;
       }
       if (success) {
+        this.writerService.writeToFile({
+          receiver,
+          subject,
+          message: text,
+          isAttempting: false,
+        });
         return response;
+      } else {
+        this.writerService.writeToFile({
+          receiver,
+          subject,
+          message: text,
+          isAttempting: true,
+        });
       }
     }
 

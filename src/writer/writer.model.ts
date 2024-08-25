@@ -8,4 +8,5 @@ export interface Record {
   retry: number;
   sentTime: Date;
   status: number;
+  isAttempting: boolean;
 }

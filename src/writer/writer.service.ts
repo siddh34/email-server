@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Record } from './writer.model';
-import fs from 'fs';
+import * as fs from 'fs';
+import * as path from 'path';
 
 @Injectable()
 export class WriterService {
@@ -13,13 +14,18 @@ export class WriterService {
   writeToFile(data: any): void {
     this.track.push(data);
     fs.writeFileSync(
-      '../../mailTracker.json',
+      path.resolve(__dirname, '../../mailTracker.json'),
       JSON.stringify(this.track, null, 2),
     );
   }
 
   loadTrack(): void {
-    this.track = JSON.parse(fs.readFileSync('../../mailTracker.json', 'utf-8'));
+    const filePath = path.resolve(__dirname, '../../mailTracker.json');
+    if (fs.existsSync(filePath)) {
+      this.track = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+    } else {
+      this.track = [];
+    }
   }
 
   getTrack(): Record[] {
@@ -28,7 +34,10 @@ export class WriterService {
 
   clearTrack(): void {
     this.track = [];
-    fs.writeFileSync('../../mailTracker.json', JSON.stringify([], null, 2));
+    fs.writeFileSync(
+      path.resolve(__dirname, '../../mailTracker.json'),
+      JSON.stringify([], null, 2),
+    );
   }
 
   checkLatestDuplicateEmail(
@@ -37,10 +46,16 @@ export class WriterService {
     message: string,
   ): boolean {
     const latestEmail = this.track[this.track.length - 1];
+
+    if (!latestEmail) {
+      return false;
+    }
+
     if (
       latestEmail.receiver === receiver &&
       latestEmail.subject === subject &&
-      latestEmail.message === message
+      latestEmail.message === message &&
+      latestEmail.isAttempting === false
     ) {
       return true;
     }
