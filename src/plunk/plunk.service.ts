@@ -44,6 +44,13 @@ export class PlunkService {
     text: string,
     retry: number = 1,
   ) {
+    if (!this.checkParams(receiver, subject, text)) {
+      return {
+        statusCode: 400,
+        message: 'Invalid parameters',
+      };
+    }
+
     let success = false;
     for (let i = 0; i < retry; i++) {
       const response = await this.sendEmail(receiver, subject, text);
@@ -54,6 +61,23 @@ export class PlunkService {
         return response;
       }
     }
+
+    Logger.error('Failed to send email after retrying');
     throw new Error('Failed to send email after retrying');
+  }
+
+  checkParams(receiver: string, subject: string, text: string): boolean {
+    if (!this.checkerService.checkIfStringIsEmail(receiver)) {
+      return false;
+    }
+
+    if (
+      !this.checkerService.emptyStringCheck(subject) ||
+      !this.checkerService.emptyStringCheck(text)
+    ) {
+      return false;
+    }
+
+    return true;
   }
 }

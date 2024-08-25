@@ -2,11 +2,15 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Resend } from 'resend';
 import { ResendResponse } from './resend.model';
+import { CheckerService } from 'src/checker/checker.service';
 
 @Injectable()
 export class ResendService {
   resend: Resend;
-  constructor(private configService: ConfigService) {
+  constructor(
+    private configService: ConfigService,
+    private checkerService: CheckerService,
+  ) {
     this.resend = new Resend(this.configService.get('RESEND_API_KEY'));
   }
 
@@ -42,6 +46,13 @@ export class ResendService {
     text: string,
     retry: number = 1,
   ) {
+    if (!this.checkParams(receiver, subject, text)) {
+      return {
+        statusCode: 400,
+        message: 'Invalid parameters',
+      };
+    }
+
     let success = false;
     for (let i = 0; i < retry; i++) {
       const response = await this.sendEmail(receiver, subject, text);
@@ -55,9 +66,22 @@ export class ResendService {
       }
     }
 
-    return {
-      message: 'Failed to send email after retrying',
-      statusCode: 500,
-    };
+    Logger.error('Failed to send email after retrying');
+    throw new Error('Failed to send email after retrying');
+  }
+
+  checkParams(receiver: string, subject: string, text: string): boolean {
+    if (!this.checkerService.checkIfStringIsEmail(receiver)) {
+      return false;
+    }
+
+    if (
+      !this.checkerService.emptyStringCheck(subject) ||
+      !this.checkerService.emptyStringCheck(text)
+    ) {
+      return false;
+    }
+
+    return true;
   }
 }

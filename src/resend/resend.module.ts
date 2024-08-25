@@ -2,9 +2,10 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ResendService } from './resend.service';
 import { ResendController } from './resend.controller';
+import { CheckerModule } from 'src/checker/checker.module';
 
 @Module({
-  imports: [ConfigModule],
+  imports: [ConfigModule, CheckerModule],
   controllers: [ResendController],
   providers: [ResendService],
 })
