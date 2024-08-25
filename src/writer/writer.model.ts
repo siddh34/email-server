@@ -7,4 +7,5 @@ export interface Record {
   message: string;
   retry: number;
   sentTime: Date;
+  status: number;
 }
