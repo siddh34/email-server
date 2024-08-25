@@ -34,4 +34,29 @@ export class ResendService {
       statusCode: 200,
     };
   }
+
+  async retryEmail(
+    receiver: string,
+    subject: string,
+    text: string,
+    retry: number = 1,
+  ) {
+    let success = false;
+    for (let i = 0; i < retry; i++) {
+      const response = await this.sendEmail(receiver, subject, text);
+
+      if (response.statusCode === 200) {
+        success = true;
+      }
+
+      if (success) {
+        return response;
+      }
+    }
+
+    return {
+      message: 'Failed to send email after retrying',
+      statusCode: 500,
+    };
+  }
 }
