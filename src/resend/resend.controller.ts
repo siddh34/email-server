@@ -1,13 +1,11 @@
-import { Controller, Param, Post } from '@nestjs/common';
+import { Controller, Inject, Param, Post } from '@nestjs/common';
 import { ResendService } from './resend.service';
 
 @Controller('resend')
 export class ResendController {
-  resendServices: ResendService;
-
-  constructor(private resendService: ResendService) {
-    this.resendServices = resendService;
-  }
+  constructor(
+    @Inject(ResendService) private readonly resendService: ResendService,
+  ) {}
 
   @Post('sendMail')
   async sendMail(

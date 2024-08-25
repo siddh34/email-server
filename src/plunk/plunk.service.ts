@@ -21,4 +21,23 @@ export class PlunkService {
       throw new Error(`Failed to send email: ${error.message}`);
     }
   }
+
+  async retryEmail(
+    receiver: string,
+    subject: string,
+    text: string,
+    retry: number = 1,
+  ) {
+    let success = false;
+    for (let i = 0; i < retry; i++) {
+      const response = await this.sendEmail(receiver, subject, text);
+      if (response.success) {
+        success = true;
+      }
+      if (success) {
+        return response;
+      }
+    }
+    throw new Error('Failed to send email after retrying');
+  }
 }
