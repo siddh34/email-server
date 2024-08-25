@@ -72,8 +72,8 @@ export class PlunkService {
     }
 
     if (
-      !this.checkerService.emptyStringCheck(subject) ||
-      !this.checkerService.emptyStringCheck(text)
+      this.checkerService.emptyStringCheck(subject) ||
+      this.checkerService.emptyStringCheck(text)
     ) {
       return false;
     }

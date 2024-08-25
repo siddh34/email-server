@@ -19,14 +19,16 @@ export class ResendService {
     subject: string,
     text: string,
   ): Promise<ResendResponse> {
+    Logger.log('Sending email');
+    Logger.log(`Receiver: ${receiver}`);
+    Logger.log(`Subject: ${subject}`);
+    Logger.log(`Text: ${text}`);
     const { data, error } = await this.resend.emails.send({
       from: 'Acme <onboarding@resend.dev>',
       to: receiver,
       subject: subject,
       html: `<p>${text}</p>`,
     });
-
-    Logger.log(`Email sent successfully: ${data.id}`);
 
     if (error) {
       Logger.error(`Failed to send email: ${error.message}`);
@@ -36,8 +38,10 @@ export class ResendService {
       };
     }
 
+    Logger.log(`Email sent successfully: ${data}`);
+
     return {
-      message: data.id,
+      message: 'Email sent successfully',
       statusCode: 200,
     };
   }
@@ -58,7 +62,6 @@ export class ResendService {
     let success = false;
     for (let i = 0; i < retry; i++) {
       const response = await this.sendEmail(receiver, subject, text);
-
       if (response.statusCode === 200) {
         success = true;
       }
@@ -78,8 +81,8 @@ export class ResendService {
     }
 
     if (
-      !this.checkerService.emptyStringCheck(subject) ||
-      !this.checkerService.emptyStringCheck(text)
+      this.checkerService.emptyStringCheck(subject) ||
+      this.checkerService.emptyStringCheck(text)
     ) {
       return false;
     }

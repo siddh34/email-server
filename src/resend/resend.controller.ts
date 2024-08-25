@@ -1,5 +1,6 @@
-import { Controller, Inject, Param, Post } from '@nestjs/common';
+import { Controller, Inject, Body, Post } from '@nestjs/common';
 import { ResendService } from './resend.service';
+import { ResendRequestBody } from './resend.model';
 
 @Controller('resend')
 export class ResendController {
@@ -8,12 +9,13 @@ export class ResendController {
   ) {}
 
   @Post('sendMail')
-  async sendMail(
-    @Param('reciever') reciever: string,
-    @Param('subject') subject: string,
-    @Param('message') message: string,
-    @Param('retry') retry: number,
-  ) {
-    await this.resendService.retryEmail(reciever, subject, message, retry);
+  async sendMail(@Body() receivedBody: ResendRequestBody) {
+    const res = await this.resendService.retryEmail(
+      receivedBody.receiver,
+      receivedBody.subject,
+      receivedBody.message,
+      receivedBody.retry,
+    );
+    return res;
   }
 }

@@ -1,5 +1,6 @@
-import { Controller, Inject, Param, Post } from '@nestjs/common';
+import { Body, Controller, Inject, Post } from '@nestjs/common';
 import { PlunkService } from './plunk.service';
+import { PlunkRequestBody } from './plunk.model';
 
 @Controller('plunk')
 export class PlunkController {
@@ -8,12 +9,13 @@ export class PlunkController {
   ) {}
 
   @Post('sendMail')
-  async sendMail(
-    @Param('reciever') reciever: string,
-    @Param('subject') subject: string,
-    @Param('message') message: string,
-    @Param('retry') retry: number,
-  ) {
-    await this.plunkService.retryEmail(reciever, subject, message, retry);
+  async sendMail(@Body() recievedBody: PlunkRequestBody) {
+    const res = await this.plunkService.retryEmail(
+      recievedBody.receiver,
+      recievedBody.subject,
+      recievedBody.message,
+      recievedBody.retry,
+    );
+    return res;
   }
 }
