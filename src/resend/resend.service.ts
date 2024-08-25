@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Resend } from 'resend';
 import { ResendResponse } from './resend.model';
@@ -23,6 +23,7 @@ export class ResendService {
     });
 
     if (error) {
+      Logger.error(`Failed to send email: ${error.message}`);
       return {
         message: error.message,
         statusCode: 500,

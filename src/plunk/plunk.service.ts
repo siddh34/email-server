@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import Plunk from '@plunk/node';
 
@@ -18,6 +18,7 @@ export class PlunkService {
       });
       return response;
     } catch (error) {
+      Logger.error(`Failed to send email: ${error.message}`);
       throw new Error(`Failed to send email: ${error.message}`);
     }
   }
