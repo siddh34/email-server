@@ -71,6 +71,10 @@ export class PlunkService {
           receiver,
           subject,
           message: text,
+          from: 'plunk',
+          retry: i,
+          sentTime: Date.now(),
+          status: 200,
           isAttempting: false,
         });
         return response;
@@ -79,6 +83,10 @@ export class PlunkService {
           receiver,
           subject,
           message: text,
+          from: 'plunk',
+          retry: i,
+          sentTime: Date.now(),
+          status: 500,
           isAttempting: true,
         });
       }

@@ -75,6 +75,10 @@ export class ResendService {
           receiver,
           subject,
           message: text,
+          from: 'resend',
+          retry: i,
+          sentTime: Date.now(),
+          status: 200,
           isAttempting: false,
         });
         return response;
@@ -82,6 +86,10 @@ export class ResendService {
         this.writerService.writeToFile({
           receiver,
           subject,
+          from: 'resend',
+          retry: i,
+          sentTime: Date.now(),
+          status: 500,
           message: text,
           isAttempting: true,
         });

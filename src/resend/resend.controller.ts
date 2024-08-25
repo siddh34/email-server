@@ -1,11 +1,13 @@
-import { Controller, Inject, Body, Post } from '@nestjs/common';
+import { Controller, Inject, Body, Post, Get } from '@nestjs/common';
 import { ResendService } from './resend.service';
 import { ResendRequestBody } from './resend.model';
+import { WriterService } from 'src/writer/writer.service';
 
 @Controller('resend')
 export class ResendController {
   constructor(
     @Inject(ResendService) private readonly resendService: ResendService,
+    @Inject(WriterService) private readonly writerService: WriterService,
   ) {}
 
   @Post('sendMail')
@@ -17,5 +19,10 @@ export class ResendController {
       receivedBody.retry,
     );
     return res;
+  }
+
+  @Get('emails')
+  async getEmails() {
+    return this.writerService.getTrackOnlyFromResend();
   }
 }

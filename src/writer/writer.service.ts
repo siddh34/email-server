@@ -40,6 +40,14 @@ export class WriterService {
     );
   }
 
+  getTrackOnlyFromResend(): Record[] {
+    return this.track.filter((record) => record.from === 'resend');
+  }
+
+  getTrackOnlyFromPlunk(): Record[] {
+    return this.track.filter((record) => record.from === 'plunk');
+  }
+
   checkLatestDuplicateEmail(
     receiver: string,
     subject: string,
