@@ -2,8 +2,8 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Resend } from 'resend';
 import { ResendResponse } from './resend.model';
-import { CheckerService } from 'src/checker/checker.service';
-import { WriterService } from 'src/writer/writer.service';
+import { CheckerService } from '../checker/checker.service';
+import { WriterService } from '../writer/writer.service';
 
 @Injectable()
 export class ResendService {
@@ -21,26 +21,26 @@ export class ResendService {
     subject: string,
     text: string,
   ): Promise<ResendResponse> {
-    const { data, error } = await this.resend.emails.send({
-      from: 'Acme <onboarding@resend.dev>',
-      to: receiver,
-      subject: subject,
-      html: `<p>${text}</p>`,
-    });
+    try {
+      const { data } = await this.resend.emails.send({
+        from: 'Acme <onboarding@resend.dev>',
+        to: receiver,
+        subject: subject,
+        html: `<p>${text}</p>`,
+      });
 
-    if (error) {
+      Logger.log(`Email sent successfully: ${data}`);
+      return {
+        message: 'Email sent successfully',
+        statusCode: 200,
+      };
+    } catch (error) {
       Logger.error(`Failed to send email: ${error.message}`);
       return {
         message: error.message,
         statusCode: 500,
       };
     }
-
-    Logger.log(`Email sent successfully: ${data}`);
-    return {
-      message: 'Email sent successfully',
-      statusCode: 200,
-    };
   }
 
   async retryEmail(

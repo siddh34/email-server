@@ -1,9 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import Plunk from '@plunk/node';
-import { CheckerService } from 'src/checker/checker.service';
+import { CheckerService } from '../checker/checker.service';
 import { PlunkResponse } from './plunk.model';
-import { WriterService } from 'src/writer/writer.service';
+import { WriterService } from '../writer/writer.service';
 
 @Injectable()
 export class PlunkService {

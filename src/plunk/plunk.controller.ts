@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Inject, Post } from '@nestjs/common';
 import { PlunkService } from './plunk.service';
 import { PlunkRequestBody } from './plunk.model';
-import { WriterService } from 'src/writer/writer.service';
+import { WriterService } from '../writer/writer.service';
 
 @Controller('plunk')
 export class PlunkController {
