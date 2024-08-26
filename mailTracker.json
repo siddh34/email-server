@@ -8,5 +8,25 @@
     "sentTime": 1724660507586,
     "status": 200,
     "isAttempting": false
+  },
+  {
+    "receiver": "ssiddharthsutar@gmail.com",
+    "subject": "Sample1",
+    "message": "Sample1",
+    "from": "resend",
+    "retry": 0,
+    "sentTime": 1724666480330,
+    "status": 200,
+    "isAttempting": false
+  },
+  {
+    "receiver": "ssiddharthsutar@gmail.com",
+    "subject": "Sample2",
+    "message": "Sample1",
+    "from": "plunk",
+    "retry": 0,
+    "sentTime": 1724666796474,
+    "status": 200,
+    "isAttempting": false
   }
 ]
