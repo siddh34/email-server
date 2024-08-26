@@ -2,6 +2,13 @@
 
 Swagger docs at `/api` endpoint
 
+## ENV To Setup
+
+```txt
+RESEND_API_KEY
+PLUNK_API_KEY
+```
+
 ## Description
 
 * Contains two email providers for emailing Resend and usePlunk
