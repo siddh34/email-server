@@ -63,6 +63,8 @@ export class ResendService {
       };
     }
 
+    if (retry === 0) retry = 1;
+
     let success = false;
     for (let i = 0; i < retry; i++) {
       const response = await this.sendEmail(receiver, subject, text);
