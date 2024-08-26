@@ -45,12 +45,14 @@ describe('PlunkController', () => {
         statusCode: 200,
         message: 'email sent successfully',
       });
+      const res = {
+        status: jest.fn().mockReturnThis(),
+        send: jest.fn(),
+      };
 
-      const result = await plunkController.sendMail(body);
-      expect(result).toEqual({
-        statusCode: 200,
-        message: 'email sent successfully',
-      });
+      await plunkController.sendMail(body, res as any);
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.send).toHaveBeenCalledWith('email sent successfully');
       expect(plunkService.retryEmail).toHaveBeenCalledWith(
         body.receiver,
         body.subject,
@@ -71,11 +73,14 @@ describe('PlunkController', () => {
         message: 'Failed to send email',
       });
 
-      const result = await plunkController.sendMail(body);
-      expect(result).toEqual({
-        statusCode: 500,
-        message: 'Failed to send email',
-      });
+      const res = {
+        status: jest.fn().mockReturnThis(),
+        send: jest.fn(),
+      };
+
+      await plunkController.sendMail(body, res as any);
+      expect(res.status).toHaveBeenCalledWith(500);
+      expect(res.send).toHaveBeenCalledWith('Failed to send email');
       expect(plunkService.retryEmail).toHaveBeenCalledWith(
         body.receiver,
         body.subject,

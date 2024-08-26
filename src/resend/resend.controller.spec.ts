@@ -46,11 +46,14 @@ describe('resendController', () => {
         message: 'email sent successfully',
       });
 
-      const result = await resendController.sendMail(body);
-      expect(result).toEqual({
-        statusCode: 200,
-        message: 'email sent successfully',
-      });
+      const res = {
+        status: jest.fn().mockReturnThis(),
+        send: jest.fn(),
+      };
+
+      await resendController.sendMail(body, res as any);
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.send).toHaveBeenCalledWith('email sent successfully');
       expect(resendService.retryEmail).toHaveBeenCalledWith(
         body.receiver,
         body.subject,
@@ -71,11 +74,14 @@ describe('resendController', () => {
         message: 'Failed to send email',
       });
 
-      const result = await resendController.sendMail(body);
-      expect(result).toEqual({
-        statusCode: 500,
-        message: 'Failed to send email',
-      });
+      const res = {
+        status: jest.fn().mockReturnThis(),
+        send: jest.fn(),
+      };
+
+      await resendController.sendMail(body, res as any);
+      expect(res.status).toHaveBeenCalledWith(500);
+      expect(res.send).toHaveBeenCalledWith('Failed to send email');
       expect(resendService.retryEmail).toHaveBeenCalledWith(
         body.receiver,
         body.subject,

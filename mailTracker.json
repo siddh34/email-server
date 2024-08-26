@@ -1,1 +1,12 @@
-[]
+[
+  {
+    "receiver": "ssiddharthsutar@gmail.com",
+    "subject": "Sample",
+    "message": "Sample",
+    "from": "resend",
+    "retry": 0,
+    "sentTime": 1724660507586,
+    "status": 200,
+    "isAttempting": false
+  }
+]
