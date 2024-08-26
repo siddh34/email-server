@@ -1,4 +1,4 @@
-FROM node:20.04
+FROM node:20
 
 WORKDIR /app
 
@@ -8,4 +8,6 @@ RUN npm install
 
 COPY . .
 
-CMD ["npm", "start:prod"]
+RUN npm run build
+
+CMD ["npm", "run", "start:prod"]

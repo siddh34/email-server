@@ -1,0 +1,10 @@
+services:
+  server:
+    build: 
+      context: .
+      dockerfile: dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - RESEND_API_KEY=${RESEND_API_KEY}
+      - PLUNK_API_KEY=${PLUNK_API_KEY}
