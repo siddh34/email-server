@@ -27,6 +27,7 @@
     "@nestjs/swagger": "^7.4.0",
     "@nestjs/throttler": "^6.2.1",
     "@plunk/node": "^3.0.2",
+    "dotenv": "^16.4.5",
     "fs": "0.0.1-security",
     "reflect-metadata": "^0.2.0",
     "resend": "^4.0.0",
