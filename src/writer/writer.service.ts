@@ -63,7 +63,8 @@ export class WriterService {
       latestEmail.receiver === receiver &&
       latestEmail.subject === subject &&
       latestEmail.message === message &&
-      latestEmail.isAttempting === false
+      latestEmail.isAttempting === false &&
+      latestEmail.status === 200
     ) {
       return true;
     }

@@ -1,7 +1,7 @@
 import { Controller, Inject, Body, Post, Get } from '@nestjs/common';
 import { ResendService } from './resend.service';
 import { ResendRequestBody } from './resend.model';
-import { WriterService } from 'src/writer/writer.service';
+import { WriterService } from '../writer/writer.service';
 
 @Controller('resend')
 export class ResendController {
